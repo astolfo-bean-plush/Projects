@@ -6,20 +6,22 @@ public class pigLatin {
         String[] pigLatin = new String[userList.length];
         int counter = 0;
         for (String i: userList) {
+            if (i.length() == 1) {
+                pigLatin[counter] = i;
+            }
             // If word has no vowels, use -1 as a sentinel
-            if (firstVowel(i) == -1) {
+            else if (firstVowel(i) == -1) {
                 String trans = i + "ay";
                 pigLatin[counter] = trans;
-                counter ++;
             }
             else {
                 int firstVowel = firstVowel(i);
                 String ch = i.substring(0, firstVowel);
-                String sent = i.substring(firstVowel);
-                String trans = sent + ch + "ay";
+                String word = i.substring(firstVowel);
+                String trans = word + ch + "ay";
                 pigLatin[counter] = trans;
-                counter++;
             }
+            counter++;
         }
         System.out.println(Arrays.toString(pigLatin).replace("[", "").replace("]", "")
         .replace(",", ""));
@@ -39,6 +41,7 @@ public class pigLatin {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter something to convert to pig latin: ");
         String userInput = input.nextLine();
+        userInput = userInput.toLowerCase();
         return userInput.split(" ");
     }
 }
