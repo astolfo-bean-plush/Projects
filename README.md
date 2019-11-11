@@ -21,3 +21,9 @@ The collatz folder contains the collatz conjecture done in java and python.
 add_1 is a solution to Challenge #366 from r/dailyprogrammer.
 
 Solved by turning both strings into lists (str1_lst, str2_lst), removing 1 item from str1_lst, comparing it to str2_lst, rebuilding str1_lst to match str1, then reiterating.
+
+--------------------------------------------------------------------------------------------------------------
+
+blackjack is a simple black jack game with some oop elements
+
+Main issue with it is that ace has two values (1 and 11) with method overloading but still only uses 11 in game.
