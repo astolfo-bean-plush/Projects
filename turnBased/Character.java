@@ -1,15 +1,17 @@
 import java.util.Scanner;
 public class Character {
     String name;
-    double HP;
+    double maxHP;
+    double currHP;
     double attack;
     double defense;
     double magic;
     double luck;
 
-    public Character(String name, double HP, double attack, double defense, double magic, double luck) {
+    public Character(String name, double maxHP, double attack, double defense, double magic, double luck) {
         this.name = name;
-        this.HP = HP;
+        this.maxHP = maxHP;
+        currHP = maxHP;
         this.attack = attack;
         this.defense = defense;
         this.magic = magic;
@@ -17,35 +19,36 @@ public class Character {
     }
 
     public void hitPointGen(int levels) {
-        HP = HP * (levels * .30);
+        maxHP += levels * .067 * maxHP;
 
     }
 
     public void atkGen(int levels) {
-        attack = attack * (levels * .30);
+        attack += levels * .072 * attack;
 
     }
 
     public void defGen(int levels) {
-        defense = defense * (levels * .30);
+        defense += (levels * .072 * defense);
 
     }
 
     public void magGen(int levels) {
-        magic = magic * (levels * .30);
+        magic += (levels * .068 * magic);
 
     }
 
     public void lckGen(int levels) {
-        luck = luck * (levels * 1.5);
+        luck += (levels * .7 * luck);
     }
 
     public int expAllocate(int type, int levels) {
         String userChoice;
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter how many points you would like to allocate");
+        System.out.println(levels);
         userChoice = sc.nextLine();
-        while (Integer.parseInt(userChoice) > levels && Integer.parseInt(userChoice) < levels) {
+        while (Integer.parseInt(userChoice) > levels || Integer.parseInt(userChoice) < levels) {
             System.out.println("Invalid input, you have " + levels + " levels to allocate");
             userChoice = sc.nextLine();
         }
@@ -86,13 +89,13 @@ public class Character {
                     System.out.println("Invalid input, enter again: ");
                     userChoice = sc.nextLine();
                 }
+                // if user decides to save, don't call expAllocate
                 if (!userChoice.equals("6"))
                     levels = expAllocate(Integer.parseInt(userChoice), levels);
             }
         }
-        //TODO add leveling in b/w fights
     }
     public void showStats() {
-        System.out.println(name + " " + HP + " " + attack + " " + defense + " " + magic + " " + luck);
+        System.out.println(name + " " + maxHP + " " + attack + " " + defense + " " + magic + " " + luck);
     }
 }
