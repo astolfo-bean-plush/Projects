@@ -19,7 +19,7 @@ public class enemyActions {
      }
 
     public double attack() {
-        return enemy.attack - userChar.defense;
+        return enemy.attack;
 
     }
 
@@ -28,16 +28,19 @@ public class enemyActions {
     }
 
     public double defend() {
+        double originalDefense = enemy.defense;
         enemy.defense = enemy.defense * 1.5;
         //TODO needs to adjust defense back to normal after turn ends
-        return 0;
+        return originalDefense;
     }
 
     public double heal() {
         double healAmount = enemy.maxHP * .2;
-        // if enemy heals and the healAmount meets or exceeds their health, currHP = maxHP
+        // if user heals and the healAmount meets or exceeds their health, currHP = maxHP
         enemy.currHP = Math.min((healAmount + enemy.currHP), enemy.maxHP);
-        return 0;
+        // if healAmount ends up meets or exceeds their health, return 0 for display purposes
+        healAmount = enemy.maxHP - (healAmount + enemy.currHP);
+        return Math.abs(healAmount);
     }
 
     public double doNothing() {

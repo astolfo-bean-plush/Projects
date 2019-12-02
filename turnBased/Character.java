@@ -11,7 +11,7 @@ public class Character {
     public Character(String name, double maxHP, double attack, double defense, double magic, double luck) {
         this.name = name;
         this.maxHP = maxHP;
-        currHP = maxHP;
+        currHP = maxHP - 10;
         this.attack = attack;
         this.defense = defense;
         this.magic = magic;
@@ -46,9 +46,8 @@ public class Character {
         String userChoice;
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter how many points you would like to allocate");
-        System.out.println(levels);
         userChoice = sc.nextLine();
-        while (Integer.parseInt(userChoice) > levels || Integer.parseInt(userChoice) < levels) {
+        while (Integer.parseInt(userChoice) > levels || Integer.parseInt(userChoice) < 0) {
             System.out.println("Invalid input, you have " + levels + " levels to allocate");
             userChoice = sc.nextLine();
         }

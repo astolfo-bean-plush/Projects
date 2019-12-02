@@ -39,7 +39,7 @@ public class Actions {
     }
 
     public double attack() {
-        return userChar.attack - enemy.defense;
+        return userChar.attack;
 
     }
 
@@ -49,15 +49,20 @@ public class Actions {
 
     public double defend() {
         userChar.defense = userChar.defense * 1.5;
-        //TODO needs to adjust defense back to normal after turn ends
-        return 0;
+        return userChar.defense / 1.5;
     }
 
     public double heal() {
+        System.out.println(userChar.maxHP + " HPmax");
+        System.out.println(userChar.currHP);
         double healAmount = userChar.maxHP * .2;
         // if user heals and the healAmount meets or exceeds their health, currHP = maxHP
-        enemy.currHP = Math.min((healAmount + userChar.currHP), userChar.maxHP);
-        return 0;
+        userChar.currHP = Math.min((healAmount + userChar.currHP), userChar.maxHP);
+        // if healAmount meets or exceeds their health, return 0 for display purposes
+        healAmount = userChar.maxHP - (healAmount + userChar.currHP);
+        //TODO heal needs to return the value that doesn't exceed maxHP i.e you have 90 HP, heal for 18, and have 100 max HP
+        // so, return 10 as that's what you're actually healing for
+        return healAmount;
     }
 
     public double doNothing() {
