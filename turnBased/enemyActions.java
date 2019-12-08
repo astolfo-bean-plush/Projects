@@ -30,7 +30,6 @@ public class enemyActions {
     public double defend() {
         double originalDefense = enemy.defense;
         enemy.defense = enemy.defense * 1.5;
-        //TODO needs to adjust defense back to normal after turn ends
         return originalDefense;
     }
 
@@ -40,7 +39,7 @@ public class enemyActions {
         enemy.currHP = Math.min((healAmount + enemy.currHP), enemy.maxHP);
         // if healAmount ends up meets or exceeds their health, return 0 for display purposes
         healAmount = enemy.maxHP - (healAmount + enemy.currHP);
-        return Math.abs(healAmount);
+        return healAmount;
     }
 
     public double doNothing() {

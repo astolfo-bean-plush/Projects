@@ -8,6 +8,7 @@ public class Game {
         String[] enemyNames = {"Paul", "Andres", "Jeremy", "Christoff", "Isaac", "Elijah Kennedy",
                 "Tommy", "Frederick", "Jeffery", "Andre Hayes", "Tlaloc"};
         // base stats
+        String userInput;
         double enemyActionValue;
         double userActionValue;
         double userCritical;
@@ -30,19 +31,26 @@ public class Game {
         System.out.println("Enter character name");
         Character userChar = new Character(sc.nextLine(), maxHealth, attack, defense, magic, luck);
         // allow userChar to distribute 10 levels
-        userChar.levelUp(0, levels);
+        userChar.levelUp(levels);
         // While the user is alive, keep creating enemies
         while (userChar.currHP > 0) {
             System.out.println("Finding opponent...");
             TimeUnit.SECONDS.sleep(1);
             Enemy enemy = new Enemy(enemyNames[rand.nextInt(enemyNames.length)], enemyMaxHealth, enemyAttack, enemyDefense, enemyMagic, enemyLuck);
-            enemy.levelUp(0, enemyLevels, rand.nextInt(5));
-            System.out.println(enemy.name + " appears \n");
+            enemy.levelUp(enemyLevels, rand.nextInt(5));
+            System.out.println(enemy.name + " appears");
             // When the enemy is slain (pending) create another
             while (enemy.currHP > 0 && userChar.currHP > 0) {
                 Actions action = new Actions(userChar, enemy);
                 // Gets a choice from the user on what they want to do during this turn
+                System.out.println("__________________________________________________________________");
+                System.out.println("You currently have " + userChar.currHP + "/" + userChar.maxHP + " HP");
+                System.out.println(enemy.name + " currently has " + enemy.currHP + "/" + enemy.maxHP + " HP");
                 userAction = action.getOption();
+                while (userAction == 6) { // Keep asking for input until it's not "show enemy stats"
+                    enemy.showStats();
+                    userAction = action.getOption();
+                }
                 // Send userAction to be dealt with
                 userActionValue = action.initiateOption(userAction);
                 enemyActions enemyAction = new enemyActions(enemy, userChar);
@@ -60,13 +68,12 @@ public class Game {
                             enemy.currHP -= (userActionValue * 2) - (enemy.defense * 2);
                             // enemy hp decreases by the user attack - (enemy defense + modifier). Then, return
                             // enemy defense back to pre-modified value
-                            enemy.defense = enemyActionValue;
                         }
                         else {
                             System.out.println(enemy.name + " defends your attack and takes " + (userActionValue - enemy.defense) + " damage");
                             enemy.currHP -= userActionValue - enemy.defense;
-                            enemy.defense = enemyActionValue;
                         }
+                        enemy.defense = enemyActionValue;
                     }
                     else {
                         // CRITICAL
@@ -88,18 +95,17 @@ public class Game {
                         if (userCritical < userChar.luck) {
                             System.out.println(enemy.name + " does their best to withstand you smiting them, you deal "+ ((userActionValue * 2) - ((enemy.defense * 2) * .33)) + " damage (CRIT)");
                             enemy.currHP -= (userActionValue * 2) - ((enemy.defense * 2) * .33);
-                            enemy.defense = enemyActionValue;
                         }
                         else {
                             System.out.println(enemy.name + " quickly cover themselves in talismans, you deal " + (userActionValue - (enemy.defense * .33)) + " damage");
                             enemy.currHP -= userActionValue - (enemy.defense * .33);
-                            enemy.defense = enemyActionValue;
                         }
+                        enemy.defense = enemyActionValue;
                     }
                     else {
                         // CRITICAL
                         if (userCritical < userChar.luck) {
-                            System.out.println("you enshrine " + enemy.name + " with a holy light, dealing " + ((userActionValue * 2) - ((enemy.defense * 2) * .33)) + " damage (CRIT)");
+                            System.out.println("You enshrine " + enemy.name + " with a holy light, dealing " + ((userActionValue * 2) - ((enemy.defense * 2) * .33)) + " damage (CRIT)");
                             enemy.currHP -= (userActionValue * 2) - ((enemy.defense * 2) * .33);
                         }
                         else {
@@ -124,34 +130,94 @@ public class Game {
                 if (enemy.currHP > 0) {
                     enemyCritical = Math.random() * 100;
                     // ATTACK
-                    if (enemyChoice == 1) {
+                    if (enemyChoice == 0) {
                         if (userAction == 3) {
                             //CRITICAL
                             if (enemyCritical < enemy.luck) {
                                 System.out.println(enemy.name + " fiercely strikes your guard, dealing " + ((enemyActionValue * 2) - (userChar.defense * 2)) + " damage" );
+                                userChar.currHP -= (enemyActionValue * 2) - (userChar.defense * 2);
                             }
                             else {
                                 System.out.println(enemy.name + " can't break your guard! Deals " + (enemyActionValue - userChar.defense) + " damage");
+                                userChar.currHP -= (enemyActionValue - userChar.defense);
+                            }
+                            userChar.defense = userActionValue;
+                        }
+                        else {
+                            // CRITICAL
+                            if (enemyCritical < enemy.luck) {
+                                System.out.println(enemy.name + " can see your weak point and strikes at it (CRIT)");
+                                userChar.currHP -= (enemyActionValue * 2) - (userChar.defense * 2);
+                            }
+                            else {
+                                System.out.println(enemy.name + " claps you out for " + (enemyActionValue - userChar.defense));
+                                userChar.currHP -= (enemyActionValue - userChar.defense);
+                            }
+
+                        }
+                    }
+                    // MAGIC
+                    else if (enemyChoice == 1) {
+                        // if user defends
+                        if (userAction == 3) {
+                            // CRITICAL
+                            if (enemyCritical < enemy.luck) {
+                                System.out.println(enemy.name + " blasts your guard with their strongest spell, dealing " + ((enemyActionValue * 2) - ((userChar.defense * 2) * .33)) + " damage (CRIT)");
+                                userChar.currHP -= (enemyActionValue * 2) - ((userChar.defense * 2) * .33);
+                            }
+                            else {
+                                System.out.println("You can see through" + enemy.name + " actions, you defend and take " + (enemyActionValue - (userChar.defense * .33)) + " damage");
+                                userChar.currHP -= enemyActionValue - (userChar.defense * .33);
+                            }
+                            userChar.defense = userActionValue;
+                        }
+                        else {
+                            // CRITICAL
+                            if (enemyCritical < enemy.luck) {
+                                System.out.println("Blasts you with the wraith of the heavens, dealing " + ((enemyActionValue * 2) - ((userChar.defense * 2) * .33) + " damage"));
+                                userChar.currHP -= (enemyActionValue * 2) - ((userChar.defense * 2) * .33);
+                            }
+                            else {
+                                System.out.println(enemy.name + " tosses a bolt of lightning your way, dealing " + (enemyActionValue - (userChar.defense * .33)) + " damage");
+                                userChar.currHP -= enemyActionValue - (userChar.defense * .33);
                             }
                         }
-
+                    }
+                    else if (enemyChoice == 2) {
+                        System.out.println(enemy.name + " Is defending for " + enemy.defense + " incoming damage");
+                        enemy.defense = enemyActionValue;
+                    }
+                    else if (enemyChoice == 3) {
+                        System.out.println(enemy.name + " heals for " + userActionValue + " HP");
+                    }
+                    else {
+                        System.out.println(enemy.name + " stands around like an oaf");
                     }
                 }
-                else {
-                    break;
+                else if (enemy.currHP < 0) {
+                    System.out.println(enemy.name + " has been defeated! You gain 8 levels (used after defeat) and future enemies become stronger.");
+                    // if enemy is defeated, give them 2 more levels to allocate on spawn
+                    enemyLevels += 12;
+                    System.out.println(enemyLevels);
+                    levels += 8;
+                }
+                if (userChar.currHP < 0) {
+                    // if player is defeated, give enemy 3 points to a random skill
+                    enemy.expAllocate(5,rand.nextInt(5));
+                    System.out.println("You have been defeated by " + enemy.name + " press \"1\" to respawn");
+                    userInput = sc.nextLine();
+                    if (userInput.equals("1")) {
+                        userChar.levelUp(levels);
+                        userChar.currHP = userChar.maxHP;
+                    }
                 }
 
 
 
 
-                //TODO make userActionValue and enemyActionValue interact
-                // add leveling in b/w fights
-                // Allow stat showing
-                // Display enemy HP
+
+                //TODO
                 // Round double values
-                // When bot dies, give bot x levels. when player dies let player distribute their levels and give bot y levels
-                // that won't be distributed until they die
-                // !Heal, doNothing, and defend methods return 0 while attacks return doubles
                 // !If defense is higher than the expected damage, deals negative damage. FIX, deal 0
 
 

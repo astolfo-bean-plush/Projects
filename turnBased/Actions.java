@@ -14,10 +14,11 @@ public class Actions {
                 "2 = Magic Attack \n" +
                 "3 = Defend \n" +
                 "4 = Heal \n" +
-                "5 = Do nothing");
+                "5 = Do nothing \n" +
+                "6 = Show enemy stats");
         userChoice = sc.nextInt();
         while(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 &&
-                userChoice != 5) {
+                userChoice != 5 && userChoice != 6) {
             System.out.println("Invalid input, enter again: ");
             userChoice = sc.nextInt();
         }
@@ -53,15 +54,13 @@ public class Actions {
     }
 
     public double heal() {
-        System.out.println(userChar.maxHP + " HPmax");
-        System.out.println(userChar.currHP);
         double healAmount = userChar.maxHP * .2;
         // if user heals and the healAmount meets or exceeds their health, currHP = maxHP
         userChar.currHP = Math.min((healAmount + userChar.currHP), userChar.maxHP);
         // if healAmount meets or exceeds their health, return 0 for display purposes
         healAmount = userChar.maxHP - (healAmount + userChar.currHP);
         //TODO heal needs to return the value that doesn't exceed maxHP i.e you have 90 HP, heal for 18, and have 100 max HP
-        // so, return 10 as that's what you're actually healing for
+        // so, return 10 as that's what you're actually healing for (new: if damage/heal = -, force = 0 )
         return healAmount;
     }
 

@@ -11,12 +11,13 @@ public class Enemy {
     public Enemy(String name, double maxHP, double attack, double defense, double magic, double luck) {
         this.name = name;
         this.maxHP = maxHP;
-        this.currHP = maxHP - 30;
+        currHP = maxHP;
         this.attack = attack;
         this.defense = defense;
         this.magic = magic;
         this.luck = luck;
     }
+
     public void hitPointGen(int levels) {
         maxHP += levels * .067 * maxHP;
 
@@ -45,6 +46,7 @@ public class Enemy {
         Random rand = new Random();
         // min 1, max levels
         int allocationAmount = rand.nextInt(levels) + 1;
+        System.out.println("Type: " + type + " Levels remaining: " + levels + " Allocation amount: " + allocationAmount);
         if(type == 0) {
             hitPointGen(allocationAmount);
             return levels - allocationAmount;
@@ -63,18 +65,15 @@ public class Enemy {
         }
     }
 
-    public void levelUp(int progress, int levels, int type) {
+    public void levelUp(int levels, int type) {
         Random rand = new Random();
-        // If you are allocating your first 10 points
-        if (progress == 0) {
-            while (levels > 0) {
-                levels = expAllocate(type, levels);
-                type = rand.nextInt(5);
-            }
+        while (levels > 0) {
+            levels = expAllocate(type, levels);
+            type = rand.nextInt(5);
         }
     }
     public void showStats() {
-        System.out.println(name + " " + maxHP + " " + attack + " " + defense + " " + magic + " " + luck);
+        System.out.println("Name: " + name + " maxHP: " + maxHP + " Attack: " + attack + " Defense: " + defense + " Magic: " + magic + " Luck: " + luck);
     }
 }
 
