@@ -46,20 +46,24 @@ public class Enemy {
         Random rand = new Random();
         // min 1, max levels
         int allocationAmount = rand.nextInt(levels) + 1;
-        System.out.println("Type: " + type + " Levels remaining: " + levels + " Allocation amount: " + allocationAmount);
         if(type == 0) {
             hitPointGen(allocationAmount);
+            currHP = maxHP; // If enemy allocates to their HP, heal them
             return levels - allocationAmount;
-        } else if (type == 1) {
+        }
+        else if (type == 1) {
             atkGen(allocationAmount);
             return levels - allocationAmount;
-        } else if (type == 2) {
+        }
+        else if (type == 2) {
             defGen(allocationAmount);
             return levels - allocationAmount;
-        } else if (type == 3) {
+        }
+        else if (type == 3) {
             magGen(allocationAmount);
             return levels - allocationAmount;
-        } else {
+        }
+        else {
             lckGen(allocationAmount);
             return levels - allocationAmount;
         }

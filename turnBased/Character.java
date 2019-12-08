@@ -55,16 +55,20 @@ public class Character {
             hitPointGen(Integer.parseInt(userChoice));
             currHP = maxHP; // If player allocates to their HP, heal them
             return levels - Integer.parseInt(userChoice);
-        } else if (type == 2) {
+        }
+        else if (type == 2) {
             atkGen(Integer.parseInt(userChoice));
             return levels - Integer.parseInt(userChoice);
-        } else if (type == 3) {
+        }
+        else if (type == 3) {
             defGen(Integer.parseInt(userChoice));
             return levels - Integer.parseInt(userChoice);
-        } else if (type == 4) {
+        }
+        else if (type == 4) {
             magGen(Integer.parseInt(userChoice));
             return levels - Integer.parseInt(userChoice);
-        } else {
+        }
+        else {
             lckGen(Integer.parseInt(userChoice));
             return levels - Integer.parseInt(userChoice);
         }

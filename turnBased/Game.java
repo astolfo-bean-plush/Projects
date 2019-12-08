@@ -54,14 +54,18 @@ public class Game {
                 // Send userAction to be dealt with
                 userActionValue = action.initiateOption(userAction);
                 enemyActions enemyAction = new enemyActions(enemy, userChar);
-                // Send a random value to determine what the bots action will be
+                // Send a random value to determine what the enemy's action will be
                 enemyChoice = rand.nextInt(5);
                 enemyActionValue = enemyAction.initiateOption(enemyChoice);
                 userCritical = Math.random() * 100;
                 // ATTACK
                 if (userAction == 1) {
+                    // if user action does negative damage to enemy, do nothing
+                    if (userActionValue < enemy.defense) {
+                        System.out.println(enemy.name + " is immune to physical attacks, deal 0 damage.");
+                    }
                     // if enemy defends
-                    if (enemyChoice == 2) {
+                    else if (enemyChoice == 2) {
                         // CRITICAL
                         if (userCritical < userChar.luck) {
                             System.out.println(enemy.name + " scuffedly blocks your attack and takes "+ ((userActionValue * 2) - (enemy.defense * 2)) + " damage (CRIT)");
@@ -89,8 +93,12 @@ public class Game {
                 }
                 // MAGIC
                 else if (userAction == 2) {
+                    // if user action does negative damage to enemy, do nothing
+                    if (userActionValue < enemy.defense) {
+                        System.out.println(enemy.name + " is immune to your magical attacks, deal 0 damage.");
+                    }
                     // if enemy defends
-                    if (enemyChoice == 2) {
+                    else if (enemyChoice == 2) {
                         // CRITICAL
                         if (userCritical < userChar.luck) {
                             System.out.println(enemy.name + " does their best to withstand you smiting them, you deal "+ ((userActionValue * 2) - ((enemy.defense * 2) * .33)) + " damage (CRIT)");
@@ -127,11 +135,16 @@ public class Game {
                 else {
                     System.out.println("You do nothing");
                 }
-                if (enemy.currHP > 0) {
+                if (enemy.currHP > 0) { // if enemy is still alive after user's actions, display their action
                     enemyCritical = Math.random() * 100;
                     // ATTACK
                     if (enemyChoice == 0) {
-                        if (userAction == 3) {
+                        // if enemy deals negative damage to user, do nothing
+                        if (enemyActionValue < userChar.defense) {
+                            System.out.println(enemy.name + " physically attacks you, but you're immune! Take 0 damage.");
+                        }
+                        // if user defends
+                        else if (userAction == 3) {
                             //CRITICAL
                             if (enemyCritical < enemy.luck) {
                                 System.out.println(enemy.name + " fiercely strikes your guard, dealing " + ((enemyActionValue * 2) - (userChar.defense * 2)) + " damage" );
@@ -158,8 +171,12 @@ public class Game {
                     }
                     // MAGIC
                     else if (enemyChoice == 1) {
+                        // if enemy deals negative damage to user, do nothing
+                        if (enemyActionValue < userChar.defense) {
+                            System.out.println(enemy.name + " magically attacks you, but you're immune! Take 0 damage.");
+                        }
                         // if user defends
-                        if (userAction == 3) {
+                        else if (userAction == 3) {
                             // CRITICAL
                             if (enemyCritical < enemy.luck) {
                                 System.out.println(enemy.name + " blasts your guard with their strongest spell, dealing " + ((enemyActionValue * 2) - ((userChar.defense * 2) * .33)) + " damage (CRIT)");
@@ -183,47 +200,38 @@ public class Game {
                             }
                         }
                     }
+                    // DEFEND
                     else if (enemyChoice == 2) {
                         System.out.println(enemy.name + " Is defending for " + enemy.defense + " incoming damage");
                         enemy.defense = enemyActionValue;
                     }
+                    // HEAL
                     else if (enemyChoice == 3) {
                         System.out.println(enemy.name + " heals for " + userActionValue + " HP");
                     }
+                    // IDLE
                     else {
                         System.out.println(enemy.name + " stands around like an oaf");
                     }
                 }
                 else if (enemy.currHP < 0) {
                     System.out.println(enemy.name + " has been defeated! You gain 8 levels (used after defeat) and future enemies become stronger.");
-                    // if enemy is defeated, give them 2 more levels to allocate on spawn
+                    // if enemy is defeated, give them 12 more levels to allocate on spawn and store user levels
                     enemyLevels += 12;
-                    System.out.println(enemyLevels);
                     levels += 8;
                 }
                 if (userChar.currHP < 0) {
                     // if player is defeated, give enemy 3 points to a random skill
-                    enemy.expAllocate(5,rand.nextInt(5));
-                    System.out.println("You have been defeated by " + enemy.name + " press \"1\" to respawn");
+                    enemy.expAllocate(rand.nextInt(5), 3);
+                    System.out.println("You have been defeated by " + enemy.name + ", press \"1\" to respawn");
                     userInput = sc.nextLine();
                     if (userInput.equals("1")) {
                         userChar.levelUp(levels);
-                        userChar.currHP = userChar.maxHP;
+                        userChar.currHP = userChar.maxHP; // if player decides to respawn, fully heal to avoid breaking loop
+                        levels = 0; // reset levels after allocation
                     }
                 }
-
-
-
-
-
-                //TODO
-                // Round double values
-                // !If defense is higher than the expected damage, deals negative damage. FIX, deal 0
-
-
             }
         }
-
-
     }
 }

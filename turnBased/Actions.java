@@ -7,6 +7,7 @@ public class Actions {
     this.enemy = enemy;
     }
     public int getOption() {
+        //TODO if user inputs string, breaks
         Scanner sc = new Scanner(System.in);
         int userChoice;
         System.out.println("What will you do? \n" +
